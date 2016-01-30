@@ -86,6 +86,23 @@ $(document).bind('keydown', function(e) {
     }
 });
 
+$(document).bind('keyup', function(e) {
+    var code = e.keyCode || e.which;
+    switch(code) {
+        // left or a
+        case 37:
+        case 65:
+            // spin counter clockwise
+            myCursor.spinning = 0;
+            break;
+        case 39:
+        case 68:
+            // spin clockwise
+            myCursor.spinning = 0;
+            break;
+    }
+});
+
 
 socket.on('server update', function(newCursors) {
     allCursors = newCursors;
