@@ -8,7 +8,7 @@ var Cursor = function () {
     this.x = 200;
     this.y = 200;
 
-    this.size = 50;
+    this.size = 60;
     this.mid = this.size / 2;
 
     this.angle = 0;

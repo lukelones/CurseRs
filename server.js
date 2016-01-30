@@ -24,8 +24,12 @@ var allCursors = {};
 var allBullets = {};
 var bulletID = 0;
 
+// Track powerups
 var allPowerups = {};
 var powerupID = 0;
+
+// Send where to render explosions to users
+var explosions = [];
 
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
@@ -46,17 +50,20 @@ io.on('connection', function(socket){
     socket.on('new cursor', function(newCursor) {
         // store new cursor object in server array
         allCursors[socket.id] = newCursor;
+        allCursors[socket.id].owner = socket.id;
     });
     //message was sent
     socket.on('new message', function(message){
         console.log('a message was sent: ' + message);
         io.emit('add message', message);
     });
+
     // update player location
     socket.on('my cursor update', function(cursor) {
         if (allCursors[socket.id] != undefined) {
             allCursors[socket.id].x = cursor.x;
             allCursors[socket.id].y = cursor.y;
+            allCursors[socket.id].ownser = cursor.id;
 
             if (cursor.spinning == 1) {
                 allCursors[socket.id].angle += SPINRATE;
@@ -67,6 +74,7 @@ io.on('connection', function(socket){
             // Create a new bullet and add it to allBullets
             if (cursor.shoot) {
                 var newBullet = new Bullet(
+                    allCursors[socket.id].owner,
                     allCursors[socket.id].x,
                     allCursors[socket.id].y,
                     allCursors[socket.id].angle
@@ -110,7 +118,12 @@ function update() {
     possiblePowerup();
     updatePowerups();
     updateBullets(deltaTime)
-    io.emit('server update', allCursors, allBullets, allPowerups);
+
+    if (explosions.length > 0) {
+        console.log(explosions);
+    }
+    io.emit('server update', allCursors, allBullets,allPowerups, explosions);
+    explosions = [];
 }
 
 function checkCollisions() {
@@ -125,7 +138,8 @@ function checkCollisions() {
 
 function checkCollisionCursor(bullet) {
     for (var cursor in allCursors) {
-        if (allCursors[cursor] == undefined) {
+        if (allCursors[cursor] == undefined ||
+            allCursors[cursor].owner == bullet.owner) {
             continue;
         }
         var realDist = Math.sqrt(
@@ -136,9 +150,13 @@ function checkCollisionCursor(bullet) {
                       (allCursors[cursor].size / 2)
 
         if (realDist < hitDist) {
-            console.log('realDist: ' + realDist + ', hitDist: ' + hitDist);
             console.log('hit');
-            //bullet.kill = true;
+            explosions.push({
+                x : bullet.x,
+                y : bullet.y
+            });
+
+            bullet.kill = true;
         }
     }
     return false;

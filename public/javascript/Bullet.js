@@ -1,6 +1,6 @@
 var bulletPic;
 
-var Bullet = function (xPos, yPos, angle) {
+var Bullet = function (owner, xPos, yPos, angle) {
     this.x = xPos;
     this.y = yPos;
     this.angle = angle;
@@ -9,6 +9,8 @@ var Bullet = function (xPos, yPos, angle) {
     this.kill = false;
 
     this.size = 5
+
+    this.owner = owner;
 };
 
 drawBullet = function(ctx, bullet) {
