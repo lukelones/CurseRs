@@ -8,8 +8,8 @@ var Cursor = function () {
     this.x = 200;
     this.y = 200;
 
-    this.height = 50;
-    this.width = 50;
+    this.size = 50;
+    this.mid = this.size / 2;
 
     this.angle = 0;
 
@@ -35,7 +35,7 @@ drawCursor = function(ctx, cursor) {
     // // shift coordinate system, rotate, draw
     ctx.translate(cursor.x, cursor.y);
     ctx.rotate(cursor.angle * RADIANS);
-    ctx.drawImage(cursorPic, -(cursor.width / 2), -(cursor.height / 2), cursor.width, cursor.height);
+    ctx.drawImage(cursorPic, -cursor.mid, -cursor.mid, cursor.size, cursor.size);
 
     // // return to old coorginate system
     ctx.restore();
