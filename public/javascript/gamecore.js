@@ -80,17 +80,7 @@ $(document).bind('keydown', function(e) {
     switch(code) {
         // enter
         case 13:
-            if (enterPressed){
-                // send message
-                enterPressed = false;
-                document.getElementById("sendMessage").click();
-                document.getSelection().removeAllRanges();
-            }
-            else{
-                // enter text box
-                enterPressed = true;
-                document.getElementById("messageText").select();
-            }
+            checkEnter();
             break;
         // left or a
         case 37:
@@ -137,6 +127,20 @@ $(document).bind('keyup', function(e) {
 $(document).click(function(event){
     myCursor.shoot = true;
 });
+
+function checkEnter(){
+    if (enterPressed){
+        // send message
+            enterPressed = false;
+            document.getElementById("sendMessage").click();
+            document.getSelection().removeAllRanges();
+    }
+    else{
+        // enter text box
+        enterPressed = true;
+        document.getElementById("messageText").select();
+    }
+}
 
 socket.on('server update', function(updateCursors, updateBullets) {
     allCursors = updateCursors;
