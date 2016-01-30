@@ -53,10 +53,38 @@ function renderCursors() {
 }
 
 document.addEventListener('mousemove', function(e) {
-    if (myCursor.x > 500) { console.log('mousemove'); }
     myCursor.x = e.clientX || e.pageX;
     myCursor.y = e.clientY || e.pageY;
 }, false);
+
+
+$(document).bind('keydown', function(e) {
+    var code = e.keyCode || e.which;
+    switch(code) {
+        // left or a
+        case 37:
+        case 65:
+            // spin counter clockwise
+            myCursor.spinning = 2;
+            break;
+        // up or w
+        case 38:
+        case 87:
+            // do nothing for now
+            break;
+        // right or d
+        case 39:
+        case 68:
+            // spin clockwise
+            myCursor.spinning = 1;
+            break;
+        // down or s
+        case 40:
+        case 83:
+            //do nothing for now
+            break;
+    }
+});
 
 
 socket.on('server update', function(newCursors) {
