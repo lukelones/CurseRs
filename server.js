@@ -35,6 +35,7 @@ io.on('connection', function(socket){
     //message was sent
     socket.on('new message', function(message){
         console.log('a message was sent: ' + message);
+        io.emit('add message', message);
     });
     // update player location
     socket.on('my cursor update', function(cursor) {

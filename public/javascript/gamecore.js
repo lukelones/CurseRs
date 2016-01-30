@@ -125,4 +125,11 @@ socket.on('server update', function(updateCursors, updateBullets) {
     allBullets = updateBullets;
 });
 
+socket.on('add message', function(message) {
+    var node = document.createElement("LI");
+    var textnode = document.createTextNode(message);
+    node.appendChild(textnode);
+    document.getElementById("messageList").appendChild(node);
+});
+
 init()
