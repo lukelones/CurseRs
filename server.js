@@ -22,6 +22,8 @@ var allCursors = {};
 var allBullets = {};
 var bulletID = 0;
 
+var allPowerups = {};
+
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
     vm.runInThisContext(code, path);
@@ -29,6 +31,8 @@ var includeInThisContext = function(path) {
 
 includeInThisContext(__dirname+"/public/javascript/Bullet.js");
 includeInThisContext(__dirname+"/public/javascript/Cursor.js");
+includeInThisContext(__dirname+"/public/javascript/Powerup.js");
+
 
 app.use(express.static(__dirname + '/public'));
 
