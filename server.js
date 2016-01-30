@@ -28,6 +28,7 @@ var includeInThisContext = function(path) {
 }.bind(this);
 
 includeInThisContext(__dirname+"/public/javascript/Bullet.js");
+includeInThisContext(__dirname+"/public/javascript/Cursor.js");
 
 app.use(express.static(__dirname + '/public'));
 
@@ -76,40 +77,53 @@ io.on('connection', function(socket){
 });
 
 
-function update(){
+function update() {
     var currentTime = Date.now();
 
     // caculate time since last update
     var deltaTime = (currentTime - lastTime)/1000;
     lastTime = currentTime;
 
-    //checkCollisions()
+    checkCollisions()
 
     updateBullets(deltaTime)
     io.emit('server update', allCursors, allBullets);
 }
 
-// function checkCollisions() {
-//     for (var bullet in allBullets) {
-//             if (checkCollisionCursor(bullet) || checkCollisionBullet(bullet)) {
-//                 allBullets[bullet].kill = true;
-//             }
-//         }
-//     }
-// }
-// 
-// function checkCollisionCursor(bullet) {
-//     for (var cursor in allCursors) {
-//         var distance = Math.sqrt(
-//             Math.pow((bullet.x - cursor.x), 2) +
-//             Math.pow((bullet.y - cursor.y), 2)
-//         );
-//         if (distance < ((bullet.size / 2) + (
-//     }
-// }
-// 
-// function checkCollisionBullet() {
-// }
+function checkCollisions() {
+    for (var bullet in allBullets) {
+        if (allBullets[bullet] != undefined &&
+            checkCollisionCursor(allBullets[bullet]) ||
+            checkCollisionBullet(allBullets[bullet])) {
+            allBullets[bullet].kill = true;
+        }
+    }
+}
+
+function checkCollisionCursor(bullet) {
+    for (var cursor in allCursors) {
+        if (allCursors[cursor] == undefined) {
+            continue;
+        }
+        var realDist = Math.sqrt(
+            Math.pow((bullet.x - allCursors[cursor].x), 2) +
+            Math.pow((bullet.y - allCursors[cursor].y), 2)
+        );
+        var hitDist = (bullet.size / 2) +
+                      (allCursors[cursor].size / 2)
+
+        if (realDist < hitDist) {
+            console.log('realDist: ' + realDist + ', hitDist: ' + hitDist);
+            console.log('hit');
+            //bullet.kill = true;
+        }
+    }
+    return false;
+}
+
+function checkCollisionBullet() {
+    return false;
+}
 
 function updateBullets(deltaTime) {
     for (var bullet in allBullets){
