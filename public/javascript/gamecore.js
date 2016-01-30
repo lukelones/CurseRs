@@ -11,6 +11,9 @@ var allCursors = {};
 
 var myCursor = new Cursor()
 
+// enter bool
+var enterPressed = false;
+
 function init() {
     // make canvas full screen
     canvas = document.getElementById('myCanvas');
@@ -68,12 +71,27 @@ document.addEventListener('mousemove', function(e) {
 
 document.getElementById("sendMessage").addEventListener("click", function(){
     var message = document.getElementById("messageText").value;
+    document.getElementById("messageText").value = "";
     socket.emit('new message', message);
 });
 
 $(document).bind('keydown', function(e) {
     var code = e.keyCode || e.which;
     switch(code) {
+        // enter
+        case 13:
+            if (enterPressed){
+                // send message
+                enterPressed = false;
+                document.getElementById("sendMessage").click();
+                document.getSelection().removeAllRanges();
+            }
+            else{
+                // enter text box
+                enterPressed = true;
+                document.getElementById("messageText").select();
+            }
+            break;
         // left or a
         case 37:
         case 65:
