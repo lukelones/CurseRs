@@ -36,6 +36,8 @@ function gameLoop() {
 
     // Send update to server
     socket.emit('my cursor update', myCursor);
+
+    myCursor.shoot = false;
 }
 
 function render() {
@@ -44,11 +46,18 @@ function render() {
     ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
 
     renderCursors();
+    renderBullets();
 }
 
 function renderCursors() {
-    for(var cursor in allCursors){
+    for (var cursor in allCursors) {
         drawCursor(ctx, allCursors[cursor]);
+    }
+}
+
+function renderBullets() {
+    for (var bullet in allBullets) {
+        drawBullet(ctx, allBullets[bullet]);
     }
 }
 
@@ -103,9 +112,13 @@ $(document).bind('keyup', function(e) {
     }
 });
 
+$(document).click(function(event){
+    myCursor.shoot = true;
+});
 
-socket.on('server update', function(newCursors) {
-    allCursors = newCursors;
+socket.on('server update', function(updateCursors, updateBullets) {
+    allCursors = updateCursors;
+    allBullets = updateBullets;
 });
 
 init()

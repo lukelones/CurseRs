@@ -36,11 +36,8 @@ drawCursor = function(ctx, cursor) {
     // // shift coordinate system, rotate, draw
     ctx.translate(cursor.x, cursor.y);
     ctx.rotate(cursor.angle * RADIANS);
-    ctx.drawImage(cursorPic, 0, 0, cursor.width, cursor.height);
+    ctx.drawImage(cursorPic, -(cursor.width / 2), -(cursor.height / 2), cursor.width, cursor.height);
 
     // // return to old coorginate system
     ctx.restore();
-
-    //ctx.fillStyle = '#FFFFFF';
-    //ctx.fillRect(cursor.x, cursor.y, cursor.width, cursor.height);
 }
