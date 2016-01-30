@@ -4,8 +4,8 @@ var app = express();
 var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
-// Internal imports
-var bullet = require('./public/javascript/Bullet.js');
+var fs = require('fs');
+var vm = require('vm');
 
 // Constants
 const updateRate = 30; // in ms
@@ -21,6 +21,13 @@ var allCursors = {};
 // Keep track of bullets
 var allBullets = {};
 var bulletID = 0;
+
+var includeInThisContext = function(path) {
+    var code = fs.readFileSync(path);
+    vm.runInThisContext(code, path);
+}.bind(this);
+
+includeInThisContext(__dirname+"/public/javascript/Bullet.js");
 
 app.use(express.static(__dirname + '/public'));
 
@@ -51,7 +58,7 @@ io.on('connection', function(socket){
 
             // Create a new bullet and add it to allBullets
             if (cursor.shoot) {
-                var newBullet = new bullet.Bullet(
+                var newBullet = new Bullet(
                     allCursors[socket.id].x,
                     allCursors[socket.id].y,
                     allCursors[socket.id].angle
@@ -76,9 +83,33 @@ function update(){
     var deltaTime = (currentTime - lastTime)/1000;
     lastTime = currentTime;
 
+    //checkCollisions()
+
     updateBullets(deltaTime)
     io.emit('server update', allCursors, allBullets);
 }
+
+// function checkCollisions() {
+//     for (var bullet in allBullets) {
+//             if (checkCollisionCursor(bullet) || checkCollisionBullet(bullet)) {
+//                 allBullets[bullet].kill = true;
+//             }
+//         }
+//     }
+// }
+// 
+// function checkCollisionCursor(bullet) {
+//     for (var cursor in allCursors) {
+//         var distance = Math.sqrt(
+//             Math.pow((bullet.x - cursor.x), 2) +
+//             Math.pow((bullet.y - cursor.y), 2)
+//         );
+//         if (distance < ((bullet.size / 2) + (
+//     }
+// }
+// 
+// function checkCollisionBullet() {
+// }
 
 function updateBullets(deltaTime) {
     for (var bullet in allBullets){
@@ -86,7 +117,6 @@ function updateBullets(deltaTime) {
             delete allBullets[bullet];
         }
         else{
-            // checkCollisions(allBullets[bullet]);
             moveBullet(deltaTime, allBullets[bullet]);
         }
     }

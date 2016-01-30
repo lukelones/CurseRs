@@ -1,16 +1,15 @@
 // cursor setup
-var cursorPic = new Image();
-cursorPic.src = ('/img/cursorimg.png');
-
 // convert from angle to radians
 var RADIANS = Math.PI/180;
+
+var cursorPic;
 
 var Cursor = function () {
     this.x = 200;
     this.y = 200;
 
-    this.height = 20;
-    this.width = 13;
+    this.height = 50;
+    this.width = 50;
 
     this.angle = 0;
 

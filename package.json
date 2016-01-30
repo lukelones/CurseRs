@@ -1,0 +1,9 @@
+{
+  "name": "stick2",
+  "version": "0.0.1",
+  "description": "single & multi-player stick figure game",
+  "dependencies": {
+    "express": "~4.10.2",
+    "socket.io": "~1.2.0"
+  }
+}

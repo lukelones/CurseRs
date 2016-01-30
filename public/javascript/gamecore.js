@@ -24,13 +24,13 @@ function init() {
     // Register your cursor
     socket.emit('new cursor', myCursor);
 
+    loadImages()
+
     // Start game
     setInterval(function() { gameLoop() }, fps);
 }
 
 function gameLoop() {
-    // Send stuff from client to server
-
     // Draw everything
     render();
 
