@@ -11,6 +11,7 @@ var allCursors = {};
 
 var myCursor = new Cursor()
 
+var allPowerups = {};
 // enter bool
 var enterPressed = false;
 
@@ -50,6 +51,7 @@ function render() {
 
     renderCursors();
     renderBullets();
+    renderPowerups();
 }
 
 function renderCursors() {
@@ -61,6 +63,12 @@ function renderCursors() {
 function renderBullets() {
     for (var bullet in allBullets) {
         drawBullet(ctx, allBullets[bullet]);
+    }
+}
+
+function renderPowerups() {
+    for (var powerup in allPowerups) {
+        drawPowerup(ctx, allPowerups[powerup]);
     }
 }
 
@@ -142,9 +150,10 @@ function checkEnter(){
     }
 }
 
-socket.on('server update', function(updateCursors, updateBullets) {
+socket.on('server update', function(updateCursors, updateBullets, updatePowerups) {
     allCursors = updateCursors;
     allBullets = updateBullets;
+    allPowerups = updatePowerups;
 });
 
 socket.on('add message', function(message) {

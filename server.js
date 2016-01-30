@@ -11,6 +11,8 @@ var vm = require('vm');
 const updateRate = 30; // in ms
 const SPINRATE = 3
 const RADIANS = Math.PI/180;
+const screenWidth = 800;
+const screenHeight = 600;
 
 // Initialize lastTime for calculating delta
 var lastTime = Date.now();
@@ -23,6 +25,7 @@ var allBullets = {};
 var bulletID = 0;
 
 var allPowerups = {};
+var powerupID = 0;
 
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
@@ -80,7 +83,22 @@ io.on('connection', function(socket){
     });
 });
 
+function possiblePowerup(){
+    var chance = Math.random();
+    if (chance < .005){
+        // spawn a Powerup
+        var xPos = 800 * Math.random();
+        var yPos = 600 * Math.random();
 
+        var newPowerup = new Powerup(
+            xPos,
+            yPos);
+        allPowerups[powerupID] = newPowerup;
+        powerupID++;
+    }
+
+
+}
 function update() {
     var currentTime = Date.now();
 
@@ -89,9 +107,10 @@ function update() {
     lastTime = currentTime;
 
     checkCollisions()
-
+    possiblePowerup();
+    updatePowerups();
     updateBullets(deltaTime)
-    io.emit('server update', allCursors, allBullets);
+    io.emit('server update', allCursors, allBullets, allPowerups);
 }
 
 function checkCollisions() {
@@ -127,6 +146,14 @@ function checkCollisionCursor(bullet) {
 
 function checkCollisionBullet() {
     return false;
+}
+
+function updatePowerups(){
+    for (var powerup in allPowerups){
+        if(allPowerups[powerup].kill) {
+            delete allPowerups[powerup];
+        }
+    }
 }
 
 function updateBullets(deltaTime) {

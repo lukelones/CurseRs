@@ -11,7 +11,7 @@ loadImages = function() {
 
     cursorPic = new Image();
     cursorPic.onload = function() {imageLoaded();};
-    cursorPic.src = ('/img/Player-Blue.png');
+    cursorPic.src = ('/img/Players-01.png');
 
     bulletPic = new Image();
     bulletPic.onload = function() {imageLoaded();};
