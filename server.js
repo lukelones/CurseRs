@@ -32,7 +32,10 @@ io.on('connection', function(socket){
         // store new cursor object in server array
         allCursors[socket.id] = newCursor;
     });
-
+    //message was sent
+    socket.on('new message', function(message){
+        console.log('a message was sent: ' + message);
+    });
     // update player location
     socket.on('my cursor update', function(cursor) {
         if (allCursors[socket.id] != undefined) {

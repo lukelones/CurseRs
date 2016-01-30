@@ -66,6 +66,10 @@ document.addEventListener('mousemove', function(e) {
     myCursor.y = e.clientY || e.pageY;
 }, false);
 
+document.getElementById("sendMessage").addEventListener("click", function(){
+    var message = document.getElementById("messageText").value;
+    socket.emit('new message', message);
+});
 
 $(document).bind('keydown', function(e) {
     var code = e.keyCode || e.which;
