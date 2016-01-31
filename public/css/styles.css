@@ -1,0 +1,50 @@
+body {
+	background: #C4BECC;
+	margin: 0;
+}
+
+.header {
+	height: 150px;
+}
+
+.logo img {
+	width: 300px;
+	margin-top: 100px;
+	margin-left: 12%;
+}
+
+.wrapper {
+}
+
+.canvas {
+	width: 800px;
+	height: 600px;
+	background-color: black;
+	float: left;
+	margin-top: 50px;
+	margin-left: 12%;
+	margin-right: 30px;
+	margin-bottom: 100px;
+}
+
+.chat {
+	width: 250px;
+	height: 450px;
+	float: left;
+	background-color: white;
+	margin-top: 50px;
+}
+
+@media screen and (max-width: 1230px) {
+    .canvas {
+    	margin-bottom: 0px;
+    }
+
+    .chat {
+       width: 800px;
+       height: 300px;
+       margin-left: 12%;
+       margin-bottom: 100px;
+    }
+
+}
