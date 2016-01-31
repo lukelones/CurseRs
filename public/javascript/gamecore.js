@@ -11,10 +11,12 @@ var allCursors = {};
 
 var explosions = [];
 const numExplosionImages = 8;
+var explosionPic;
 
 var myCursor = new Cursor()
 
 var allPowerups = {};
+
 // enter bool
 var enterPressed = false;
 
@@ -86,7 +88,7 @@ function renderExplosions() {
 function drawExplosion(boom) {
     console.log('boom');
     for (var i = 0; i < numExplosionImages; i++) {
-        console.log('boom: ' + i);
+        console.log('boom: ' + i + ', x: ' + boom.x + ', y: ' + boom.y);
         ctx.drawImage(explosionPic, i*50, 0, 50, 50, boom.x, boom.y, 50, 50);
     }
 }
@@ -169,7 +171,7 @@ function checkEnter(){
     }
 }
 
-socket.on('server update', function(updateCursors, updateBullets, updateExplosions) {
+socket.on('server update', function(updateCursors, updateBullets, updatePowerups, updateExplosions) {
     allCursors = updateCursors;
     allBullets = updateBullets;
     allPowerups = updatePowerups;
