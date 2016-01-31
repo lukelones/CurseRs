@@ -30,11 +30,15 @@ body {
 }
 
 .chat {
+	font-family: 'Lato';
 	width: 250px;
 	height: 450px;
 	float: left;
 	background-color: #DED7E5;
 	margin-top: 50px;
+}
+
+ul {
 	font-family: 'Lato';
 }
 
@@ -69,5 +73,15 @@ button {
        margin-left: 150px;
        margin-bottom: 100px;
     }
+
+    input {
+    	margin-top: 240px;
+    	width: 240px;
+
+	}
+
+	button {
+		margin-top: 222px;
+	}
 
 }
