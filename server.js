@@ -28,10 +28,6 @@ var bulletID = 0;
 var allPowerups = {};
 var powerupID = 0;
 
-// Send where to render explosions to users
-var allExplosions = {};
-var explosionID = 0;
-
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
     vm.runInThisContext(code, path);
@@ -87,12 +83,6 @@ io.on('connection', function(socket){
         }
     });
 
-    socket.on('kill explosion', function(explosion) {
-        if (allExplosions[explosion.id] != undefined) {
-            delete allExplosions[explosion.id];
-        }
-    });
-
     socket.on('disconnect', function(){
         console.log('user disconnected');
         delete allCursors[socket.id];
@@ -122,21 +112,12 @@ function update() {
     var deltaTime = (currentTime - lastTime)/1000;
     lastTime = currentTime;
 
-    killExplosions();
     checkCollisions()
     possiblePowerup();
     updatePowerups();
     updateBullets(deltaTime)
 
-    io.emit('server update', allCursors, allBullets,allPowerups, allExplosions);
-}
-
-function killExplosions() {
-    for (var explosion in allExplosions) {
-        if (allExplosions[explosion].frame < 0) {
-            delete allExplosions[explosion]
-        }
-    }
+    io.emit('server update', allCursors, allBullets,allPowerups);
 }
 
 function checkCollisions() {
@@ -163,11 +144,10 @@ function checkCollisionCursor(bullet) {
                       (allCursors[cursor].size / 2)
 
         if (realDist < hitDist) {
-            console.log('hit');
-            var splode = new Explosion(explosionID, bullet.x, bullet.y);
-            allExplosions[explosionID] = splode;
-            explosionID++;
-
+            var splode = new Explosion(bullet.x, bullet.y);
+            splode.x -= splode.size/2;
+            splode.y -= splode.size/2;
+            io.emit('explosion', splode);
             bullet.kill = true;
         }
     }

@@ -9,11 +9,11 @@ var fps = 25;
 var allBullets = {};
 var allCursors = {};
 
-var allExplosions = {};
-
 var myCursor = new Cursor()
 
 var allPowerups = {};
+
+var allExplosions = [];
 
 // enter bool
 var enterPressed = false;
@@ -77,21 +77,13 @@ function renderPowerups() {
 }
 
 function renderExplosions() {
-    console.log(allExplosions);
-    for (var explosion in allExplosions) {
-        drawExplosion(ctx, allExplosions[explosion]);
-        if (allExplosions[explosion].frame < 0) {
-            socket.emit('kill explosion', allExplosions[explosion]);
-        }
+    for (var i = 0; i < allExplosions.length; i++) {
+        drawExplosion(ctx, allExplosions[i]);
     }
+    allExplosions = allExplosions.filter(function (el) {
+        return el.frame > 0;
+    });
 }
-
-// function drawExplosion(boom) {
-//     for (var i = 0; i < numExplosionImages; i++) {
-//         console.log('boom: ' + i + ', x: ' + boom.x + ', y: ' + boom.y);
-//         ctx.drawImage(explosionPic, i*50, 0, 50, 50, boom.x, boom.y, 50, 50);
-//     }
-// }
 
 document.addEventListener('mousemove', function(e) {
     myCursor.x = e.clientX || e.pageX;
@@ -171,11 +163,14 @@ function checkEnter(){
     }
 }
 
-socket.on('server update', function(updateCursors, updateBullets, updatePowerups, updateExplosions) {
+socket.on('server update', function(updateCursors, updateBullets, updatePowerups) {
     allCursors = updateCursors;
     allBullets = updateBullets;
     allPowerups = updatePowerups;
-    allExplosions = updateExplosions;
+});
+
+socket.on('explosion', function(explosion) {
+    allExplosions.push(explosion);
 });
 
 socket.on('add message', function(message) {
