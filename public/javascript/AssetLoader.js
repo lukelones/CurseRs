@@ -39,6 +39,10 @@ loadImages = function() {
     backgroundPic = new Image();
     backgroundPic.onload = function() {imageLoaded();};
     backgroundPic.src = ('/img/Background.png');
+
+    monsterPic = new Image();
+    monsterPic.onload = function() {imageLoaded();};
+    monsterPic.src = ('/img/monster.png');
 }
 
 imageLoaded = function() {

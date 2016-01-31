@@ -8,6 +8,7 @@ var fps = 25;
 // Arrays for bullets/Cursors
 var allBullets = {};
 var allCursors = {};
+var allMonsters = {};
 
 var myCursor = new Cursor()
 
@@ -62,6 +63,13 @@ function render() {
     renderBullets();
     renderPowerups();
     renderExplosions();
+    renderMonsters();
+}
+
+function renderMonsters() {
+    for (var monster in allMonsters) {
+        drawMonster(ctx, allMonsters[monster]);
+    }
 }
 
 function renderCursors() {
@@ -188,10 +196,12 @@ socket.on('socket id', function(id) {
     myCursor.id = id;
 });
 
-socket.on('server update', function(updateCursors, updateBullets, updatePowerups) {
+socket.on('server update', function(updateCursors, updateBullets,
+                                    updatePowerups, updateMonsters) {
     allCursors = updateCursors;
     allBullets = updateBullets;
     allPowerups = updatePowerups;
+    allMonsters = updateMonsters;
 });
 
 socket.on('explosion', function(explosion) {

@@ -28,6 +28,9 @@ var bulletID = 0;
 var allPowerups = {};
 var powerupID = 0;
 
+var allMonsters = {};
+var monsterID = 0;
+
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
     vm.runInThisContext(code, path);
@@ -37,6 +40,7 @@ includeInThisContext(__dirname+"/public/javascript/Bullet.js");
 includeInThisContext(__dirname+"/public/javascript/Cursor.js");
 includeInThisContext(__dirname+"/public/javascript/Powerup.js");
 includeInThisContext(__dirname+"/public/javascript/Explosion.js");
+includeInThisContext(__dirname+"/public/javascript/Monster.js");
 
 
 app.use(express.static(__dirname + '/public'));
@@ -141,13 +145,31 @@ function update() {
     lastTime = currentTime;
 
     playerLogic();
+    monsterLogic();
 
     checkCollisions()
     possiblePowerup();
     updatePowerups();
     updateBullets(deltaTime)
 
-    io.emit('server update', allCursors, allBullets, allPowerups);
+    io.emit('server update', allCursors, allBullets, allPowerups, allMonsters);
+}
+
+function monsterLogic() {
+    var chance = Math.random();
+    if (Object.keys(allMonsters).length < 3 && chance < .05){
+        // spawn a Powerup
+        var x = 800;
+        var y = 600;
+
+        var xdir = -1;
+        var ydir = -1;
+
+        var newMonster = new Monster(x, y, xdir, ydir);
+
+        allMonsters[monsterID] = newMonster;
+        monsterID++;
+    }
 }
 
 function playerLogic() {
