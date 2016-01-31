@@ -42,7 +42,7 @@ loadImages = function() {
 
     monsterPic = new Image();
     monsterPic.onload = function() {imageLoaded();};
-    monsterPic.src = ('/img/monster.png');
+    monsterPic.src = ('/img/Demon1.png');
 }
 
 imageLoaded = function() {

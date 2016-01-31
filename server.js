@@ -156,6 +156,7 @@ function update() {
 }
 
 function monsterLogic() {
+    checkCollisionMonsterCursor();
     var chance = Math.random();
     if (Object.keys(allMonsters).length < 3 && chance < .05){
         // spawn a Powerup
@@ -169,6 +170,25 @@ function monsterLogic() {
 
         allMonsters[monsterID] = newMonster;
         monsterID++;
+    }
+    for (var monster in allMonsters) {
+        allMonsters[monster].x += allMonsters[monster].xdir;
+        allMonsters[monster].y += allMonsters[monster].ydir;
+
+
+        if (allMonsters[monster].health <= 0) {
+            allMonsters[monster].deadTime = Math.random()*500 + 300;
+            allMonsters[monster].health = 4;
+        }
+        if (allMonsters[monster].deadTime > 0) {
+            allMonsters[monster].deadTime--;
+        }
+
+        if (allMonsters[monster].x > 800 || allMonsters[monster].x < 0 ||
+            allMonsters[monster].y > 800 || allMonsters[monster].y < 0 ||
+            allMonsters[monster].deadTime > 0) {
+            delete allMonsters[monster];
+        }
     }
 }
 
@@ -194,6 +214,7 @@ function checkCollisions() {
     for (var bullet in allBullets) {
         if (allBullets[bullet] != undefined &&
             checkCollisionCursor(allBullets[bullet]) ||
+            checkCollisionMonsterBullet(allBullets[bullet]) ||
             checkCollisionBullet(allBullets[bullet])) {
             allBullets[bullet].kill = true;
         }
@@ -204,6 +225,69 @@ function checkCollisions() {
             checkCollisionPowerup(allPowerups[powerup]);
         }
     }
+}
+
+function checkCollisionMonsterBullet(bullet) {
+    // Monster - Bullet Collision
+    for (var monster in allMonsters) {
+        if (allMonsters[monster] == undefined ||
+            allMonsters[monster].owner == bullet.owner ||
+            allMonsters[monster].deadTime > 0) {
+            continue;
+        }
+        var realDist = Math.sqrt(
+            Math.pow((bullet.x - allMonsters[monster].x), 2) +
+            Math.pow((bullet.y - allMonsters[monster].y), 2)
+        );
+        var hitDist = (bullet.size / 2) +
+                      (allMonsters[monster].size / 2)
+
+        if (realDist < hitDist) {
+            createExplosion(bullet);
+
+            allMonsters[monster].health--;
+            if (allMonsters[monster].health <= 0) {
+                createExplosion(allMonsters[monster]);
+            }
+            bullet.kill = true;
+        }
+    }
+    return false;
+}
+
+function checkCollisionMonsterCursor() {
+    for (var monster in allMonsters) {
+        for (var cursor in allCursors) {
+            if (allMonsters[monster] == undefined ||
+                allMonsters[monster].deadTime > 0) {
+                continue;
+            }
+            if (allCursors[cursor] == undefined ||
+                allCursors[cursor].deadTime > 0) {
+                continue;
+            }
+
+            var realDist = Math.sqrt(
+                Math.pow((allCursors[cursor].x - allMonsters[monster].x), 2) +
+                Math.pow((allCursors[cursor].y - allMonsters[monster].y), 2)
+            );
+
+            var hitDist = (allCursors[cursor].size / 2) +
+                          (allMonsters[monster].size / 2)
+            if (realDist < hitDist) {
+                createExplosion(allMonsters[monster]);
+
+                allMonsters[monster].health--;
+                if (!allCursors[cursor].shield) {
+                    allCursors[cursor].health--;
+                }
+                if (allCursors[cursor].health <= 0) {
+                    createExplosion(allCursors[cursor]);
+                }
+            }
+        }
+    }
+    return false;
 }
 
 function checkCollisionCursor(bullet) {

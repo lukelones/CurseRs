@@ -11,8 +11,8 @@ var Monster = function (x, y, xdir, ydir) {
     this.ydir = ydir;
 
     this.size = 60;
-    this.drawWidth = 102;
-    this.drawHeight = 153;
+    this.drawWidth = 70;
+    this.drawHeight = 108;
     this.midWidth = this.drawWidth / 2;
     this.midHeight = this.drawHeight / 2;
 
@@ -41,7 +41,5 @@ drawMonster = function(ctx, monster) {
 
         // return to old coorginate system
         ctx.restore();
-    } else if (monster.owner == mymonster.id) {
-        ctx.fillText("Respawn in: " + monster.deadTime, 10, 50);
     }
 }
