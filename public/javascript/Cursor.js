@@ -20,12 +20,16 @@ var Cursor = function () {
     this.spinning = 0;
 
     // player requests to shoot
-    // this.shoot = false;
+    this.shoot = false;
+
+    // Active powerups
+    this.tripshot = false;
+    this.shield = false;
 
     // limits firing rate
     // this.reloadTime = 5;
 
-    // this.health = 3;
+    this.health = 3;
 }
 
 drawCursor = function(ctx, cursor) {

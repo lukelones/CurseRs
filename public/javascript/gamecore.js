@@ -22,8 +22,8 @@ function init() {
     // make canvas full screen
     canvas = document.getElementById('myCanvas');
     ctx = canvas.getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+    ctx.canvas.width = 800;
+    ctx.canvas.height = 600;
 
     // hide your real cursor
     ctx.canvas.style.cursor = "none";
@@ -40,6 +40,12 @@ function init() {
 function gameLoop() {
     // Draw everything
     render();
+
+    if (myCursor.id && allCursors[myCursor.id]) {
+        myCursor.health = allCursors[myCursor.id].health;
+        myCursor.shield = allCursors[myCursor.id].shield;
+        myCursor.tripshot = allCursors[myCursor.id].tripshot;
+    }
 
     // Send update to server
     socket.emit('my cursor update', myCursor);
@@ -66,7 +72,7 @@ function renderCursors() {
 
 function renderBullets() {
     for (var bullet in allBullets) {
-        drawBullet(ctx, allBullets[bullet]);
+        drawBullet(ctx, allBullets[bullet], socket);
     }
 }
 
@@ -88,9 +94,19 @@ function renderExplosions() {
     });
 }
 
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+}
+
 document.addEventListener('mousemove', function(e) {
-    myCursor.x = e.clientX || e.pageX;
-    myCursor.y = e.clientY || e.pageY;
+    pos = getMousePos(canvas, e);
+
+    myCursor.x = pos.x;
+    myCursor.y = pos.y;
 }, false);
 
 document.getElementById("sendMessage").addEventListener("click", function(){
@@ -165,6 +181,10 @@ function checkEnter(){
         document.getElementById("messageText").select();
     }
 }
+
+socket.on('socket id', function(id) {
+    myCursor.id = id;
+});
 
 socket.on('server update', function(updateCursors, updateBullets, updatePowerups) {
     allCursors = updateCursors;

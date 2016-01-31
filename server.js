@@ -49,6 +49,7 @@ io.on('connection', function(socket){
         // store new cursor object in server array
         allCursors[socket.id] = newCursor;
         allCursors[socket.id].owner = socket.id;
+        socket.emit('socket id', socket.id);
     });
     //message was sent
     socket.on('new message', function(message){
@@ -71,14 +72,7 @@ io.on('connection', function(socket){
 
             // Create a new bullet and add it to allBullets
             if (cursor.shoot) {
-                var newBullet = new Bullet(
-                    allCursors[socket.id].owner,
-                    allCursors[socket.id].x,
-                    allCursors[socket.id].y,
-                    allCursors[socket.id].angle
-                );
-                allBullets[bulletID] = newBullet;
-                bulletID++;
+                spawnBullet(socket, cursor);
             }
         }
     });
@@ -89,16 +83,48 @@ io.on('connection', function(socket){
     });
 });
 
+function spawnBullet(socket, cursor) {
+    var newBullet = new Bullet(
+        allCursors[socket.id].owner,
+        allCursors[socket.id].x,
+        allCursors[socket.id].y,
+        allCursors[socket.id].angle
+    );
+    allBullets[bulletID] = newBullet;
+    bulletID++;
+
+    // hacky -- make this better
+    if (cursor.tripshot) {
+        var newBullet = new Bullet(
+            allCursors[socket.id].owner,
+            allCursors[socket.id].x,
+            allCursors[socket.id].y,
+            allCursors[socket.id].angle + 15
+        );
+        allBullets[bulletID] = newBullet;
+        bulletID++;
+
+        var newBullet = new Bullet(
+            allCursors[socket.id].owner,
+            allCursors[socket.id].x,
+            allCursors[socket.id].y,
+            allCursors[socket.id].angle - 15
+        );
+        allBullets[bulletID] = newBullet;
+        bulletID++;
+    }
+}
+
 function possiblePowerup(){
     var chance = Math.random();
     if (chance < .005){
         // spawn a Powerup
         var xPos = 800 * Math.random();
         var yPos = 600 * Math.random();
+        var type = Math.floor((Math.random() * 3));;
 
-        var newPowerup = new Powerup(
-            xPos,
-            yPos);
+        var newPowerup = new Powerup(xPos, yPos, type);
+
         allPowerups[powerupID] = newPowerup;
         powerupID++;
     }
@@ -150,14 +176,18 @@ function checkCollisionCursor(bullet) {
                       (allCursors[cursor].size / 2)
 
         if (realDist < hitDist) {
-            var splode = new Explosion(bullet.x, bullet.y);
-            splode.x -= splode.size/2;
-            splode.y -= splode.size/2;
-            io.emit('explosion', splode);
+            createExplosion(bullet);
             bullet.kill = true;
         }
     }
     return false;
+}
+
+function createExplosion (bullet) {
+    var splode = new Explosion(bullet.x, bullet.y);
+    splode.x -= splode.size/2;
+    splode.y -= splode.size/2;
+    io.emit('explosion', splode);
 }
 
 function checkCollisionBullet() {
@@ -176,9 +206,17 @@ function checkCollisionPowerup(powerup) {
         var hitDist = (powerup.size / 2) +
                       (allCursors[cursor].size / 2);
         if (realDist < hitDist) {
-            console.log('pick up');
+            if (powerup.type == HEALTH) {
+                allCursors[cursor].health++;
+            } else if (powerup.type == SHIELD) {
+                allCursors[cursor].shield = true;
+            } else if (powerup.type == TRIPSHOT) {
+                allCursors[cursor].tripshot = true;
+            } else {
+                console.log('invalid powerup type: ' + powerup.type);
+            }
+
             powerup.kill = true;
-            //need to give cursor bonus
         }
     }
 }

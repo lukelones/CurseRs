@@ -1,5 +1,5 @@
 assetsLoaded = 0;
-assetsToLoad = 3
+assetsToLoad = 4
 
 loadImages = function() {
     //ADD ANY IMAGES TO LOAD HERE.
@@ -14,9 +14,25 @@ loadImages = function() {
     bulletPic.onload = function() {imageLoaded();};
     bulletPic.src = ('/img/Bullet-Basic.png');
 
+    myBulletPic = new Image();
+    myBulletPic.onload = function() {imageLoaded();};
+    myBulletPic.src = ('/img/Bullet-Friendly.png');
+
     explosionPic = new Image();
     explosionPic.onload = function() {imageLoaded();};
     explosionPic.src = ('/img/Explosion.png');
+
+    tripShotUpPic = new Image();
+    tripShotUpPic.onload = function() {imageLoaded();};
+    tripShotUpPic.src = ('/img/PowerUpTripleShot.png');
+
+    shieldUpPic = new Image();
+    shieldUpPic.onload = function() {imageLoaded();};
+    shieldUpPic.src = ('/img/PowerUpShield.png');
+
+    healthUpPic = new Image();
+    healthUpPic.onload = function() {imageLoaded();};
+    healthUpPic.src = ('/img/PowerUpHealth.png');
 }
 
 imageLoaded = function() {
