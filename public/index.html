@@ -1,21 +1,34 @@
 <!doctype html>
 <html>
     <head>
-        <title>Wow, Cursorz</title>
+        <title>Cursers</title> 
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     </head>
     <body>
-        <canvas id="myCanvas"></canvas>
-        <div id="chat">
-            <ul id = "messageList" style="list-style-type:none">
-                 <li>Coffee</li>
-                 <li>Tea</li>
-                 <li>Milk</li>
-            </ul>
+        <div class="header">
+            <div class=logo>
+                <img src="LogoWhite.png">
+            </div>
         </div>
-        <input type="text" id = "messageText"><br>
-        <button id = "sendMessage">Send</button> 
+        <div class="content">
+            <div class="wrapper">
+                <div class="canvas">
+                    <canvas id="myCanvas" width=800 height=600></canvas>
+                </div>
+                <div class="chat" id="chat">
+                    <ul id = "messageList" style="list-style-type:none">
+                         <li>Welcome to CurseRs</li>
+                    </ul>
+                    <input type="text" id = "messageText"><br>
+                    <button id = "sendMessage">Send</button> 
+                </div>
+            </div>
+        </div>
+        <div onmousedown="return false">asd</div>
+
+        <div onmousedown="event.preventDefault ? event.preventDefault() : event.returnValue = false"></div>
         <script type='text/javascript', src='javascript/AssetLoader.js'></script>
         <script type="text/javascript", src="javascript/Cursor.js"></script>
         <script type="text/javascript", src="javascript/Bullet.js"></script>
