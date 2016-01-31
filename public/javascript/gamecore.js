@@ -9,9 +9,7 @@ var fps = 25;
 var allBullets = {};
 var allCursors = {};
 
-var explosions = [];
-const numExplosionImages = 8;
-var explosionPic;
+var allExplosions = {};
 
 var myCursor = new Cursor()
 
@@ -57,6 +55,7 @@ function render() {
     renderCursors();
     renderBullets();
     renderPowerups();
+    renderExplosions();
 }
 
 function renderCursors() {
@@ -78,20 +77,21 @@ function renderPowerups() {
 }
 
 function renderExplosions() {
-    for (var i = 0; i < explosions.length; i++) {
-        console.log('splode: ' + i);
-        drawExplosion(explosions[i]);
+    console.log(allExplosions);
+    for (var explosion in allExplosions) {
+        drawExplosion(ctx, allExplosions[explosion]);
+        if (allExplosions[explosion].frame < 0) {
+            socket.emit('kill explosion', allExplosions[explosion]);
+        }
     }
-    explosions = [];
 }
 
-function drawExplosion(boom) {
-    console.log('boom');
-    for (var i = 0; i < numExplosionImages; i++) {
-        console.log('boom: ' + i + ', x: ' + boom.x + ', y: ' + boom.y);
-        ctx.drawImage(explosionPic, i*50, 0, 50, 50, boom.x, boom.y, 50, 50);
-    }
-}
+// function drawExplosion(boom) {
+//     for (var i = 0; i < numExplosionImages; i++) {
+//         console.log('boom: ' + i + ', x: ' + boom.x + ', y: ' + boom.y);
+//         ctx.drawImage(explosionPic, i*50, 0, 50, 50, boom.x, boom.y, 50, 50);
+//     }
+// }
 
 document.addEventListener('mousemove', function(e) {
     myCursor.x = e.clientX || e.pageX;
@@ -175,12 +175,7 @@ socket.on('server update', function(updateCursors, updateBullets, updatePowerups
     allCursors = updateCursors;
     allBullets = updateBullets;
     allPowerups = updatePowerups;
-    if (updateExplosions.length > 0) {
-        explosions = updateExplosions;
-        renderExplosions();
-        console.log("got splode");
-        console.log(explosions);
-    }
+    allExplosions = updateExplosions;
 });
 
 socket.on('add message', function(message) {

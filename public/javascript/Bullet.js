@@ -14,7 +14,6 @@ var Bullet = function (owner, xPos, yPos, angle) {
 };
 
 drawBullet = function(ctx, bullet) {
-    ctx.fillStyle = "#FF0000";
     ctx.drawImage(bulletPic, bullet.x, bullet.y, bullet.size, bullet.size);
 }
 
