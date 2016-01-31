@@ -197,7 +197,7 @@ function monsterLogic() {
 function playerLogic() {
     for (var cursor in allCursors) {
         if (allCursors[cursor].health <= 0) {
-            allCursors[cursor].deadTime = 500;
+            allCursors[cursor].deadTime = 250;
             allCursors[cursor].health = 4;
         }
         if (allCursors[cursor].deadTime > 0) {

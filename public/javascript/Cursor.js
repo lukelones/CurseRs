@@ -52,6 +52,8 @@ drawCursor = function(ctx, cursor) {
         // return to old coorginate system
         ctx.restore();
     } else if (cursor.owner == myCursor.id) {
-        ctx.fillText("Respawn in: " + cursor.deadTime, 10, 50);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = "24px Helvetica";
+        ctx.fillText("Respawn in: " + cursor.deadTime, 50, 50);
     }
 }
