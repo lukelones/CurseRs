@@ -16,7 +16,7 @@ var Monster = function (x, y, xdir, ydir) {
     this.midWidth = this.drawWidth / 2;
     this.midHeight = this.drawHeight / 2;
 
-    this.angle = -45;
+    this.angle = 180 + (Math.atan2(-xdir, ydir)/(Math.PI/180));
 
     // player requests to shoot
     this.shoot = false;

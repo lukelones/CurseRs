@@ -160,11 +160,11 @@ function monsterLogic() {
     var chance = Math.random();
     if (Object.keys(allMonsters).length < 3 && chance < .05){
         // spawn a Powerup
-        var x = 800;
-        var y = 600;
+        var x = Math.random() * 795 + 5;
+        var y = Math.random() * 595 + 5;
 
-        var xdir = -1;
-        var ydir = -1;
+        var xdir = x < 400 ? (3 * Math.random() + .5) : (-3 * Math.random() + .5);
+        var ydir = y < 400 ? (3 * Math.random() + .5) : (-3 * Math.random() + .5);
 
         var newMonster = new Monster(x, y, xdir, ydir);
 
