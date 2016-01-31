@@ -55,7 +55,6 @@ function gameLoop() {
 
 function render() {
     // draw black background
-    ctx.fillStyle = "#000";
     ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
 
     renderCursors();
@@ -194,6 +193,11 @@ socket.on('server update', function(updateCursors, updateBullets, updatePowerups
 
 socket.on('explosion', function(explosion) {
     allExplosions.push(explosion);
+    soundExplosion();
+});
+
+socket.on('bullet sound', function(bullet) {
+    soundBullet(ctx, bullet, socket.id);
 });
 
 socket.on('add message', function(message) {

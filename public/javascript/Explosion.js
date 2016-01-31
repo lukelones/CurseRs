@@ -24,3 +24,7 @@ drawExplosion = function(ctx, explosion) {
     }
 }
 
+soundExplosion = function() {
+    var snd = new Audio("/sounds/Explosion1.wav");
+    snd.play();
+}

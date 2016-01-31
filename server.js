@@ -113,6 +113,8 @@ function spawnBullet(socket, cursor) {
         allBullets[bulletID] = newBullet;
         bulletID++;
     }
+
+    io.emit('bullet sound', newBullet);
 }
 
 function possiblePowerup(){
@@ -138,12 +140,22 @@ function update() {
     var deltaTime = (currentTime - lastTime)/1000;
     lastTime = currentTime;
 
+    handleCursors();
+
     checkCollisions()
     possiblePowerup();
     updatePowerups();
     updateBullets(deltaTime)
 
     io.emit('server update', allCursors, allBullets, allPowerups);
+}
+
+function handleCursors() {
+    for (var cursor in allCursors) {
+        if (allCursors[cursor].health <= 0) {
+            console.log('cursor dead');
+        }
+    }
 }
 
 function checkCollisions() {
@@ -177,6 +189,7 @@ function checkCollisionCursor(bullet) {
 
         if (realDist < hitDist) {
             createExplosion(bullet);
+            allCursors[cursor].health--;
             bullet.kill = true;
         }
     }
