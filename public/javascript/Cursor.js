@@ -9,7 +9,8 @@ var Cursor = function () {
     this.y = 200;
 
     this.size = 60;
-    this.mid = this.size / 2;
+    this.drawSize = 70;
+    this.mid = this.drawSize / 2;
 
     this.angle = 0;
 
@@ -30,17 +31,23 @@ var Cursor = function () {
     // this.reloadTime = 5;
 
     this.health = 3;
+
+    this.deadTime = 0;
 }
 
 drawCursor = function(ctx, cursor) {
-    // // stores current coordinate system
-    ctx.save();
+    if (cursor.deadTime <= 0) {
+        // stores current coordinate system
+        ctx.save();
 
-    // // shift coordinate system, rotate, draw
-    ctx.translate(cursor.x, cursor.y);
-    ctx.rotate(cursor.angle * RADIANS);
-    ctx.drawImage(cursorPic, -cursor.mid, -cursor.mid, cursor.size, cursor.size);
+        // shift coordinate system, rotate, draw
+        ctx.translate(cursor.x, cursor.y);
+        ctx.rotate(cursor.angle * RADIANS);
+        ctx.drawImage(cursorPic, -cursor.mid, -cursor.mid, cursor.drawSize, cursor.drawSize);
 
-    // // return to old coorginate system
-    ctx.restore();
+        // return to old coorginate system
+        ctx.restore();
+    } else if (cursor.owner == myCursor.id) {
+        ctx.fillText("Respawn in: " + cursor.deadTime, 10, 50);
+    }
 }
