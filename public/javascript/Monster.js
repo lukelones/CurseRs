@@ -1,14 +1,17 @@
 // convert from angle to radians
 var RADIANS = Math.PI/180;
 
-var monsterPic;
+var monster0Pic, monster1Pic, monster2Pic;
+var numMonsters = 3;
 
-var Monster = function (x, y, xdir, ydir) {
+var Monster = function (x, y, xdir, ydir, type) {
     this.x = x;
     this.y = y;
 
     this.xdir = xdir;
     this.ydir = ydir;
+
+    this.type = type;
 
     this.size = 60;
     this.drawWidth = 70;
@@ -36,8 +39,17 @@ drawMonster = function(ctx, monster) {
         ctx.rotate(monster.angle * RADIANS);
 
         var idx = 4 - monster.health;
-        ctx.drawImage(monsterPic, -monster.midWidth, -monster.midHeight,
-                      monster.drawWidth, monster.drawHeight);
+
+        if (monster.type == 0) {
+            ctx.drawImage(monster0Pic, -monster.midWidth, -monster.midHeight,
+                          monster.drawWidth, monster.drawHeight);
+        } else if (monster.type == 1) {
+            ctx.drawImage(monster1Pic, -monster.midWidth, -monster.midHeight,
+                          monster.drawWidth, monster.drawHeight);
+        } else if (monster.type == 2) {
+            ctx.drawImage(monster2Pic, -monster.midWidth, -monster.midHeight,
+                          monster.drawWidth, monster.drawHeight);
+        }
 
         // return to old coorginate system
         ctx.restore();

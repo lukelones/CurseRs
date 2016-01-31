@@ -166,7 +166,9 @@ function monsterLogic() {
         var xdir = x < 400 ? (3 * Math.random() + .5) : (-3 * Math.random() + .5);
         var ydir = y < 400 ? (3 * Math.random() + .5) : (-3 * Math.random() + .5);
 
-        var newMonster = new Monster(x, y, xdir, ydir);
+        var type = Math.floor((Math.random() * 3));;
+
+        var newMonster = new Monster(x, y, xdir, ydir, type);
 
         allMonsters[monsterID] = newMonster;
         monsterID++;
