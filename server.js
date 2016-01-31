@@ -117,7 +117,7 @@ function update() {
     updatePowerups();
     updateBullets(deltaTime)
 
-    io.emit('server update', allCursors, allBullets,allPowerups);
+    io.emit('server update', allCursors, allBullets, allPowerups);
 }
 
 function checkCollisions() {
@@ -126,6 +126,12 @@ function checkCollisions() {
             checkCollisionCursor(allBullets[bullet]) ||
             checkCollisionBullet(allBullets[bullet])) {
             allBullets[bullet].kill = true;
+        }
+    }
+
+    for (var powerup in allPowerups){
+        if (allPowerups[powerup] != undefined){
+            checkCollisionPowerup(allPowerups[powerup]);
         }
     }
 }
@@ -156,6 +162,25 @@ function checkCollisionCursor(bullet) {
 
 function checkCollisionBullet() {
     return false;
+}
+
+function checkCollisionPowerup(powerup) {
+    for (var cursor in allCursors) {
+        if (allCursors[cursor] == undefined){
+            continue;
+        }
+        var realDist = Math.sqrt(
+            Math.pow((powerup.x - allCursors[cursor].x), 2) +
+            Math.pow((powerup.y - allCursors[cursor].y), 2)
+        );
+        var hitDist = (powerup.size / 2) +
+                      (allCursors[cursor].size / 2);
+        if (realDist < hitDist) {
+            console.log('pick up');
+            powerup.kill = true;
+            //need to give cursor bonus
+        }
+    }
 }
 
 function updatePowerups(){
