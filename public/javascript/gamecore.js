@@ -77,7 +77,10 @@ function renderPowerups() {
 }
 
 function renderExplosions() {
-    for (var i = 0; i < allExplosions.length; i++) {
+    for (var i = allExplosions.length - 1; i > -1; i--) {
+        if (allExplosions[i].frame > 8) {
+            allExplosions.remove(i);
+        }
         drawExplosion(ctx, allExplosions[i]);
     }
     allExplosions = allExplosions.filter(function (el) {
