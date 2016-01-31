@@ -43,7 +43,11 @@ drawCursor = function(ctx, cursor) {
         // shift coordinate system, rotate, draw
         ctx.translate(cursor.x, cursor.y);
         ctx.rotate(cursor.angle * RADIANS);
-        ctx.drawImage(cursorPic, -cursor.mid, -cursor.mid, cursor.drawSize, cursor.drawSize);
+
+        var idx = cursor.health;
+        if (cursor.shield) { idx = 5; }
+        ctx.drawImage(cursorPic, cursor.drawSize * idx, 0, cursor.drawSize, cursor.drawSize,
+                      -cursor.mid, -cursor.mid, cursor.drawSize, cursor.drawSize);
 
         // return to old coorginate system
         ctx.restore();
