@@ -1,13 +1,10 @@
 assetsLoaded = 0;
-assetsToLoad = 2
+assetsToLoad = 3
 
 loadImages = function() {
     //ADD ANY IMAGES TO LOAD HERE.
     //CAN DEFINE IMAGE VAR IN YOUR FILE JUST REFERENCE IT HERE
     //AN BE SURE TO ADD ONTO THE CONSTANT AT THE TOP WHEN YOU ADD ONE
-
-
-    // city pics
 
     cursorPic = new Image();
     cursorPic.onload = function() {imageLoaded();};
@@ -16,6 +13,10 @@ loadImages = function() {
     bulletPic = new Image();
     bulletPic.onload = function() {imageLoaded();};
     bulletPic.src = ('/img/Bullet-Basic.png');
+
+    explosionPic = new Image();
+    explosionPic.onload = function() {imageLoaded();};
+    explosionPic.src = ('/img/Explosion.png');
 }
 
 imageLoaded = function() {

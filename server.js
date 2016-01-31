@@ -28,9 +28,6 @@ var bulletID = 0;
 var allPowerups = {};
 var powerupID = 0;
 
-// Send where to render explosions to users
-var explosions = [];
-
 var includeInThisContext = function(path) {
     var code = fs.readFileSync(path);
     vm.runInThisContext(code, path);
@@ -39,6 +36,7 @@ var includeInThisContext = function(path) {
 includeInThisContext(__dirname+"/public/javascript/Bullet.js");
 includeInThisContext(__dirname+"/public/javascript/Cursor.js");
 includeInThisContext(__dirname+"/public/javascript/Powerup.js");
+includeInThisContext(__dirname+"/public/javascript/Explosion.js");
 
 
 app.use(express.static(__dirname + '/public'));
@@ -119,11 +117,7 @@ function update() {
     updatePowerups();
     updateBullets(deltaTime)
 
-    if (explosions.length > 0) {
-        console.log(explosions);
-    }
-    io.emit('server update', allCursors, allBullets,allPowerups, explosions);
-    explosions = [];
+    io.emit('server update', allCursors, allBullets,allPowerups);
 }
 
 function checkCollisions() {
@@ -150,12 +144,10 @@ function checkCollisionCursor(bullet) {
                       (allCursors[cursor].size / 2)
 
         if (realDist < hitDist) {
-            console.log('hit');
-            explosions.push({
-                x : bullet.x,
-                y : bullet.y
-            });
-
+            var splode = new Explosion(bullet.x, bullet.y);
+            splode.x -= splode.size/2;
+            splode.y -= splode.size/2;
+            io.emit('explosion', splode);
             bullet.kill = true;
         }
     }
