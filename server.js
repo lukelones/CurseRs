@@ -154,7 +154,7 @@ function playerLogic() {
     for (var cursor in allCursors) {
         if (allCursors[cursor].health <= 0) {
             allCursors[cursor].deadTime = 500;
-            allCursors[cursor].health = 5;
+            allCursors[cursor].health = 4;
         }
         if (allCursors[cursor].deadTime > 0) {
             allCursors[cursor].deadTime--;
@@ -237,7 +237,9 @@ function checkCollisionPowerup(powerup) {
         var hitDist = (powerup.size / 2) +
                       (allCursors[cursor].size / 2);
         if (realDist < hitDist) {
-            if (powerup.type == HEALTH && allCursors[cursor].health < 5) {
+            // io.emit('powerup sound',
+
+            if (powerup.type == HEALTH && allCursors[cursor].health < 4) {
                 allCursors[cursor].health++;
             } else if (powerup.type == SHIELD) {
                 allCursors[cursor].shield = 100;

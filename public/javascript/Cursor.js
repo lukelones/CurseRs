@@ -24,13 +24,13 @@ var Cursor = function () {
     this.shoot = false;
 
     // Active powerups
-    this.tripshot = false;
-    this.shield = false;
+    this.tripshot = 0;
+    this.shield = 0;
 
     // limits firing rate
     // this.reloadTime = 5;
 
-    this.health = 3;
+    this.health = 4;
 
     this.deadTime = 0;
 }
@@ -44,7 +44,7 @@ drawCursor = function(ctx, cursor) {
         ctx.translate(cursor.x, cursor.y);
         ctx.rotate(cursor.angle * RADIANS);
 
-        var idx = cursor.health;
+        var idx = 4 - cursor.health;
         if (cursor.shield) { idx = 5; }
         ctx.drawImage(cursorPic, cursor.drawSize * idx, 0, cursor.drawSize, cursor.drawSize,
                       -cursor.mid, -cursor.mid, cursor.drawSize, cursor.drawSize);
