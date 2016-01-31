@@ -13,7 +13,7 @@ var Powerup = function (xPos, yPos, type) {
     // mark powerup to be deleted
     this.kill = false;
 
-    this.size = 50;
+    this.size = 30;
 };
 
 drawPowerup = function(ctx, powerup) {

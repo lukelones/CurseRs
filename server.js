@@ -113,11 +113,13 @@ function spawnBullet(socket, cursor) {
         allBullets[bulletID] = newBullet;
         bulletID++;
     }
+
+    io.emit('bullet sound', newBullet);
 }
 
 function possiblePowerup(){
     var chance = Math.random();
-    if (chance < .005){
+    if (Object.keys(allPowerups).length < 3 && chance < .005){
         // spawn a Powerup
         var xPos = 800 * Math.random();
         var yPos = 600 * Math.random();
@@ -138,12 +140,32 @@ function update() {
     var deltaTime = (currentTime - lastTime)/1000;
     lastTime = currentTime;
 
+    playerLogic();
+
     checkCollisions()
     possiblePowerup();
     updatePowerups();
     updateBullets(deltaTime)
 
     io.emit('server update', allCursors, allBullets, allPowerups);
+}
+
+function playerLogic() {
+    for (var cursor in allCursors) {
+        if (allCursors[cursor].health <= 0) {
+            allCursors[cursor].deadTime = 500;
+            allCursors[cursor].health = 5;
+        }
+        if (allCursors[cursor].deadTime > 0) {
+            allCursors[cursor].deadTime--;
+        }
+        if (allCursors[cursor].shield > 0) {
+            allCursors[cursor].shield--;
+        }
+        if (allCursors[cursor].tripshot > 0) {
+            allCursors[cursor].tripshot--;
+        }
+    }
 }
 
 function checkCollisions() {
@@ -165,7 +187,8 @@ function checkCollisions() {
 function checkCollisionCursor(bullet) {
     for (var cursor in allCursors) {
         if (allCursors[cursor] == undefined ||
-            allCursors[cursor].owner == bullet.owner) {
+            allCursors[cursor].owner == bullet.owner ||
+            allCursors[cursor].deadTime > 0) {
             continue;
         }
         var realDist = Math.sqrt(
@@ -177,6 +200,13 @@ function checkCollisionCursor(bullet) {
 
         if (realDist < hitDist) {
             createExplosion(bullet);
+
+            if (!allCursors[cursor].shield) {
+                allCursors[cursor].health--;
+            }
+            if (allCursors[cursor].health <= 0) {
+                createExplosion(allCursors[cursor]);
+            }
             bullet.kill = true;
         }
     }
@@ -196,7 +226,8 @@ function checkCollisionBullet() {
 
 function checkCollisionPowerup(powerup) {
     for (var cursor in allCursors) {
-        if (allCursors[cursor] == undefined){
+        if (allCursors[cursor] == undefined ||
+            allCursors[cursor].deadTime > 0){
             continue;
         }
         var realDist = Math.sqrt(
@@ -206,12 +237,12 @@ function checkCollisionPowerup(powerup) {
         var hitDist = (powerup.size / 2) +
                       (allCursors[cursor].size / 2);
         if (realDist < hitDist) {
-            if (powerup.type == HEALTH) {
+            if (powerup.type == HEALTH && allCursors[cursor].health < 5) {
                 allCursors[cursor].health++;
             } else if (powerup.type == SHIELD) {
-                allCursors[cursor].shield = true;
+                allCursors[cursor].shield = 100;
             } else if (powerup.type == TRIPSHOT) {
-                allCursors[cursor].tripshot = true;
+                allCursors[cursor].tripshot = 100;
             } else {
                 console.log('invalid powerup type: ' + powerup.type);
             }

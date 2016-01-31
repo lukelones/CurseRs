@@ -45,6 +45,7 @@ function gameLoop() {
         myCursor.health = allCursors[myCursor.id].health;
         myCursor.shield = allCursors[myCursor.id].shield;
         myCursor.tripshot = allCursors[myCursor.id].tripshot;
+        myCursor.deadTime = allCursors[myCursor.id].deadTime;
     }
 
     // Send update to server
@@ -55,8 +56,7 @@ function gameLoop() {
 
 function render() {
     // draw black background
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
+    ctx.drawImage(backgroundPic, 0,0, ctx.canvas.width, ctx.canvas.height);
 
     renderCursors();
     renderBullets();
@@ -165,7 +165,9 @@ $(document).bind('keyup', function(e) {
 });
 
 $(document).click(function(event){
-    myCursor.shoot = true;
+    if (myCursor.deadTime <= 0) {
+        myCursor.shoot = true;
+    }
 });
 
 function checkEnter(){
@@ -194,6 +196,11 @@ socket.on('server update', function(updateCursors, updateBullets, updatePowerups
 
 socket.on('explosion', function(explosion) {
     allExplosions.push(explosion);
+    soundExplosion();
+});
+
+socket.on('bullet sound', function(bullet) {
+    soundBullet(ctx, bullet, socket.id);
 });
 
 socket.on('add message', function(message) {

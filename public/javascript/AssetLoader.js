@@ -1,5 +1,7 @@
+var backgroundPic;
+
 assetsLoaded = 0;
-assetsToLoad = 4
+assetsToLoad = 5;
 
 loadImages = function() {
     //ADD ANY IMAGES TO LOAD HERE.
@@ -33,6 +35,10 @@ loadImages = function() {
     healthUpPic = new Image();
     healthUpPic.onload = function() {imageLoaded();};
     healthUpPic.src = ('/img/PowerUpHealth.png');
+
+    backgroundPic = new Image();
+    backgroundPic.onload = function() {imageLoaded();};
+    backgroundPic.src = ('/img/Background.png');
 }
 
 imageLoaded = function() {
